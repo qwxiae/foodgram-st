@@ -1,11 +1,7 @@
+## Настройте проект
 - Клонируйте репозиторий с проектом на свой компьютер.
 ```
 git clone https://github.com/clmr-y/foodgram-st.git
-```
-- Установить и активировать виртуальное окружение
-
-```
-source /venv/bin/activate
 ```
 
 - Установить зависимости из файла requirements.txt
@@ -16,6 +12,13 @@ python -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```
+
+- Установить и активировать виртуальное окружение
+
+```
+source /venv/bin/activate
+```
+
 - Создать файл .env в папке проектов backend и infra:
 ```.env
 DB_ENGINE=django.db.backends.postgresql
