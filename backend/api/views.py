@@ -203,7 +203,6 @@ class UserViewSet(UserViewSet):
         if request.method == "DELETE":
             follow_instance = Follow.objects.filter(user=user, author=author).first()
             if not follow_instance:
-                # Return 400 instead of 404 to satisfy the test
                 return Response(
                     {"errors": "Подписка не существует."},
                     status=status.HTTP_400_BAD_REQUEST,
