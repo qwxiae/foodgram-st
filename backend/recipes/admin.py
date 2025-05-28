@@ -21,7 +21,7 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ("name", "author")
     list_filter = ("author", "name")
     inlines = (IngredientInline,)
-    empty_value_display = "-пусто-"
+    empty_value_display = "[пусто]"
 
     def get_favorites(self, obj):
         return obj.favorites.count()
@@ -38,21 +38,21 @@ class IngredientAdmin(admin.ModelAdmin):
     list_display = ("name", "measurement_unit")
     search_fields = ("name",)
     list_filter = ("name",)
-    empty_value_display = "-пусто-"
+    empty_value_display = "[пусто]"
 
 
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ("user", "recipe")
     list_filter = ("user", "recipe")
     search_fields = ("user", "recipe")
-    empty_value_display = "-пусто-"
+    empty_value_display = "[пусто]"
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ("recipe", "user")
     list_filter = ("recipe", "user")
     search_fields = ("user",)
-    empty_value_display = "-пусто-"
+    empty_value_display = "[пусто]"
 
 
 admin.site.register(ShoppingCart, ShoppingCartAdmin)

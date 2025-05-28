@@ -4,8 +4,13 @@
 git clone https://github.com/clmr-y/foodgram-st.git
 ```
 
-- Установить зависимости из файла requirements.txt
+- Установить и активировать виртуальное окружение
 
+```
+source /venv/bin/activate
+```
+
+- Установить зависимости из файла requirements.txt
 ```
 python -m pip install --upgrade pip
 ```
@@ -13,13 +18,8 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-- Установить и активировать виртуальное окружение
 
-```
-source /venv/bin/activate
-```
-
-- Создать файл .env в папке проектов backend и infra:
+- Создать файл .env в папке infra:
 ```.env
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=postgres
@@ -33,11 +33,6 @@ DEBUG=0
 ### Выполните миграции:
 ```
 python manage.py migrate
-```
-
-- В папке с файлом manage.py выполнить команду:
-```
-python manage.py runserver
 ```
 
 - Создание супер пользователя 
@@ -65,14 +60,4 @@ docker-compose up -d --build
 ### Создайте суперпользователя:
 ```
 docker-compose exec backend python manage.py createsuperuser
-```
-
-### Загрузите статику:
-```
-docker-compose exec backend python manage.py collectstatic --no-input
-```
-
-### Заполните базу тестовыми данными:
-```
-docker-compose exec backend python manage.py dataloads
 ```

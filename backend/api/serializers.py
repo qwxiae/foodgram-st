@@ -19,7 +19,7 @@ class UserAvatarSerializer(UserSerializer):
 
     def validate(self, data):
         if "avatar" not in data:
-            raise serializers.ValidationError("Поле avatar обязательно!")
+            raise serializers.ValidationError("Поле avatar обязательно.")
         return data
 
 
@@ -66,12 +66,12 @@ class SubscribeListSerializer(UserSerializer):
         user = self.context.get("request").user
         if user.follower.filter(author=author_id).exists():
             raise ValidationError(
-                detail="Подписка уже существует",
+                detail="Подписка существует",
                 code=status.HTTP_400_BAD_REQUEST,
             )
         if user == author:
             raise ValidationError(
-                detail="Нельзя подписаться на самого себя",
+                detail="Нельзя подписаться на себя",
                 code=status.HTTP_400_BAD_REQUEST,
             )
         return data
@@ -125,8 +125,6 @@ class IngredientCreateSerializer(serializers.ModelSerializer):
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
-    """Сериализатор просмотра рецепта"""
-
     author = UserSerializer(read_only=True, many=False)
     ingredients = IngredientRecipeSerializer(many=True, source="ingredienttorecipe")
     is_favorited = serializers.SerializerMethodField()
@@ -165,8 +163,6 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для создания рецепта"""
-
     ingredients = IngredientCreateSerializer(many=True)
     image = Base64ImageField(max_length=None, required=True)
     author = UserSerializer(read_only=True)
@@ -192,25 +188,27 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     def validate_cooking_time(self, cooking_time):
         if cooking_time < 1:
             raise serializers.ValidationError("Время готовки не меньше одной минуты")
+        elif cooking_time > 1440:
+            raise serializers.ValidationError("Время готовки не больще одного дня")
         return cooking_time
 
     def validate_ingredients(self, ingredients):
         ingredients_list = []
         if not ingredients:
-            raise serializers.ValidationError("Отсутствуют ингридиенты")
+            raise serializers.ValidationError("Ингрeдиенты отсутствуют")
         for ingredient in ingredients:
             if ingredient["id"] in ingredients_list:
                 raise serializers.ValidationError("Ингридиенты должны быть уникальны")
             ingredients_list.append(ingredient["id"])
             if int(ingredient.get("amount")) < 1:
-                raise serializers.ValidationError("Количество ингредиента больше 0")
+                raise serializers.ValidationError("Количество ингредиентов должно быть больше 0")
         return ingredients
 
     @staticmethod
     def create_ingredients(recipe, ingredients):
-        ingredient_liist = []
+        ingredient_list = []
         for ingredient_data in ingredients:
-            ingredient_liist.append(
+            ingredient_list.append(
                 IngredientRecipe(
                     ingredient=ingredient_data["id"],
                     amount=ingredient_data["amount"],
@@ -218,7 +216,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                 )
             )
 
-        IngredientRecipe.objects.bulk_create(ingredient_liist)
+        IngredientRecipe.objects.bulk_create(ingredient_list)
 
     def create(self, validated_data):
         request = self.context.get("request", None)

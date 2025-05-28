@@ -1,22 +1,21 @@
 from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from datetime import datetime
 from users.models import User
 from sqids import Sqids
-from colorfield.fields import ColorField
 
 
 class Ingredient(models.Model):
     name = models.CharField(
         max_length=settings.LENGTH_OF_FIELDS_RECIPES,
-        verbose_name="Название ингридиента",
+        verbose_name="Название ингредиента",
         db_index=True,
     )
     measurement_unit = models.CharField(
-        max_length=settings.LENGTH_OF_FIELDS_RECIPES, verbose_name="Еденицы измерения"
+        max_length=settings.LENGTH_OF_FIELDS_RECIPES, verbose_name="Еденица измерения"
     )
 
     class Meta:
@@ -139,6 +138,6 @@ class IngredientRecipe(models.Model):
 
     def __str__(self):
         return (
-            f"{self.ingredient.name} :: {self.ingredient.measurement_unit}"
-            f" - {self.amount} "
+            f"{self.ingredient.name} - {self.ingredient.measurement_unit}"
+            f" : {self.amount} "
         )

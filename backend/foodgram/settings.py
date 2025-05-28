@@ -15,7 +15,6 @@ DEBUG = os.getenv('DEBUG', default=False)
 SECRET_KEY = os.getenv("TOKEN", "default-value")
 CORS_ORIGIN_ALLOW_ALL = True
 
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -112,9 +111,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-STATIC_URL = "/static/"
+STATIC_URL = '/backend_static/'
 STATIC_ROOT = str(BASE_DIR / "static")
+
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
 ADMIN_STATIC_URL = "/django_static/"
@@ -134,6 +133,9 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
     ],
 }
 
@@ -166,3 +168,5 @@ LENGTH_OF_FIELDS_USER_1 = 150
 LENGTH_OF_FIELDS_USER_2 = 150
 
 LENGTH_OF_FIELDS_RECIPES = 200
+
+PAGINATION_PAGE_SIZE = 6

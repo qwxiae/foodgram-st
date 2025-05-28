@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
@@ -7,11 +8,7 @@ from django.db.models import F, Q, UniqueConstraint
 
 class User(AbstractUser):
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = (
-        "username",
-        "first_name",
-        "last_name",
-    )
+    REQUIRED_FIELDS = ("username", "first_name", "last_name")
     avatar = models.ImageField(
         upload_to="avatars/", verbose_name="Аватар", blank=True, null=True
     )
@@ -29,7 +26,7 @@ class User(AbstractUser):
         verbose_name="username",
         max_length=settings.LENGTH_OF_FIELDS_USER_2,
         unique=True,
-        validators=(UnicodeUsernameValidator(),),
+        validators=[UnicodeUsernameValidator(),],
     )
 
     class Meta:
@@ -45,7 +42,7 @@ class Follow(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name="Автор",
+        verbose_name="Пользователь",
         related_name="follower",
     )
     author = models.ForeignKey(
@@ -66,3 +63,7 @@ class Follow(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user} подписан на {self.author}"
+
+    def clean(self):
+        if self.user == self.author:
+            raise ValidationError("Нельзя подписываться на себя.")
