@@ -14,6 +14,7 @@ DEBUG = os.getenv('DEBUG', default=False)
 
 SECRET_KEY = os.getenv("TOKEN", "default-value")
 CORS_ORIGIN_ALLOW_ALL = True
+USERNAME_FIELD = 'email'
 
 INSTALLED_APPS = [
     "django.contrib.admin",

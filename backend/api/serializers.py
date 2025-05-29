@@ -17,6 +17,11 @@ class UserAvatarSerializer(UserSerializer):
         model = User
         fields = ("avatar",)
 
+    def validate(self, data):
+        if "avatar" not in data:
+            raise serializers.ValidationError("Поле avatar обязательно.")
+        return data
+
 
 class UserSerializer(UserAvatarSerializer):
     is_subscribed = SerializerMethodField(read_only=True)
