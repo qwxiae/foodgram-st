@@ -40,8 +40,8 @@ class Recipe(models.Model):
         related_name="recipes",
     )
     name = models.CharField(
-        verbose_name="Название рецепта",
         max_length=settings.LENGTH_OF_FIELDS_RECIPES,
+        verbose_name="Название рецепта",
     )
     image = models.ImageField(upload_to="recipes/image/", verbose_name="Изображение")
     text = models.TextField(verbose_name="Описание")
@@ -49,7 +49,7 @@ class Recipe(models.Model):
         Ingredient, verbose_name="Ингридиенты", through="IngredientRecipe"
     )
     cooking_time = models.PositiveSmallIntegerField(
-        verbose_name="Время готовки",
+        verbose_name="Время готовки (минуты)",
         validators=[
             MinValueValidator(1, message="Время приготовления не менее 1 минуты."),
             MaxValueValidator(1441, message="Время приготовления не более 24 часов."),

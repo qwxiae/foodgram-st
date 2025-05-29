@@ -17,11 +17,6 @@ class UserAvatarSerializer(UserSerializer):
         model = User
         fields = ("avatar",)
 
-    def validate(self, data):
-        if "avatar" not in data:
-            raise serializers.ValidationError("Поле avatar обязательно.")
-        return data
-
 
 class UserSerializer(UserAvatarSerializer):
     is_subscribed = SerializerMethodField(read_only=True)
@@ -40,7 +35,7 @@ class UserSerializer(UserAvatarSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get("request")
-        if self.context.get("request").user.is_anonymous:
+        if not request or request.user.is_anonymous:
             return False
         return obj.following.filter(user=request.user).exists()
 
@@ -90,7 +85,6 @@ class SubscribeListSerializer(UserSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Ingredient
         fields = (

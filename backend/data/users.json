@@ -1,0 +1,37 @@
+[
+  {
+    "email": "vpupkin@yandex.ru",
+    "username": "vasya.pupkin",
+    "first_name": "Вася",
+    "last_name": "Пупкин",
+    "password": "Qwerty123"
+  },
+  {
+    "email": "ivanov@mail.ru",
+    "username": "ivan.ivanov",
+    "first_name": "Иван",
+    "last_name": "Иванов",
+    "password": "StrongPass456"
+  },
+  {
+    "email": "masha@example.com",
+    "username": "masha_petrovna",
+    "first_name": "Маша",
+    "last_name": "Петрова",
+    "password": "Masha2024!"
+  },
+  {
+    "email": "kolya@ya.ru",
+    "username": "kolya123",
+    "first_name": "Коля",
+    "last_name": "Смирнов",
+    "password": "KolyaPass789"
+  },
+  {
+    "email": "anna@test.com",
+    "username": "anna.k",
+    "first_name": "Анна",
+    "last_name": "Козлова",
+    "password": "AnnaPwd321"
+  }
+]

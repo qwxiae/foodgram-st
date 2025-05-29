@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from .models import Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart
 
 
@@ -7,6 +6,8 @@ class IngredientInline(admin.TabularInline):
     model = IngredientRecipe
     extra = 3
     min_num = 1
+    verbose_name = "Ингредиент рецепта"
+    verbose_name_plural = "Ингредиенты рецепта"
 
 
 @admin.register(Recipe)
@@ -15,25 +16,24 @@ class RecipeAdmin(admin.ModelAdmin):
         "author",
         "name",
         "cooking_time",
-        "get_favorites",
-        "get_ingredients",
+        "favorites_count",
+        "ingredients_list",
     )
     search_fields = ("name", "author")
     list_filter = ("author", "name")
     inlines = (IngredientInline,)
     empty_value_display = "[пусто]"
 
-    def get_favorites(self, obj):
+    def favorites_count(self, obj):
         return obj.favorites.count()
+    favorites_count.short_description = "Избранное"
 
-    get_favorites.short_description = "Избранное"
-
-    def get_ingredients(self, obj):
+    def ingredients_list(self, obj):
         return ", ".join([ingredients.name for ingredients in obj.ingredients.all()])
+    ingredients_list.short_description = "Ингридиенты"
 
-    get_ingredients.short_description = "Ингридиенты"
 
-
+@admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ("name", "measurement_unit")
     search_fields = ("name",)
@@ -41,6 +41,7 @@ class IngredientAdmin(admin.ModelAdmin):
     empty_value_display = "[пусто]"
 
 
+@admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ("user", "recipe")
     list_filter = ("user", "recipe")
@@ -48,13 +49,9 @@ class FavoriteAdmin(admin.ModelAdmin):
     empty_value_display = "[пусто]"
 
 
+@admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ("recipe", "user")
     list_filter = ("recipe", "user")
     search_fields = ("user",)
     empty_value_display = "[пусто]"
-
-
-admin.site.register(ShoppingCart, ShoppingCartAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Favorite, FavoriteAdmin)

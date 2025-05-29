@@ -1,0 +1,184 @@
+[
+  {
+    "email": "vpupkin@yandex.ru",
+    "password": "Qwerty123",
+    "recipe": {
+      "ingredients": [
+        { "id": 3, "amount": 30 },
+        { "id": 1, "amount": 50 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 1 for vpupkin@yandex.ru",
+      "text": "This is a test recipe 1 created by vpupkin@yandex.ru.",
+      "cooking_time": 21
+    }
+  },
+  {
+    "email": "vpupkin@yandex.ru",
+    "password": "Qwerty123",
+    "recipe": {
+      "ingredients": [
+        { "id": 4, "amount": 15 },
+        { "id": 2, "amount": 20 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 2 for vpupkin@yandex.ru",
+      "text": "This is a test recipe 2 created by vpupkin@yandex.ru.",
+      "cooking_time": 12
+    }
+  },
+  {
+    "email": "vpupkin@yandex.ru",
+    "password": "Qwerty123",
+    "recipe": {
+      "ingredients": [
+        { "id": 3, "amount": 30 },
+        { "id": 2, "amount": 20 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 3 for vpupkin@yandex.ru",
+      "text": "This is a test recipe 3 created by vpupkin@yandex.ru.",
+      "cooking_time": 25
+    }
+  },
+  {
+    "email": "ivanov@mail.ru",
+    "password": "StrongPass456",
+    "recipe": {
+      "ingredients": [
+        { "id": 1, "amount": 100 },
+        { "id": 2, "amount": 50 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 1 for ivanov@mail.ru",
+      "text": "This is a test recipe 1 created by ivanov@mail.ru.",
+      "cooking_time": 30
+    }
+  },
+  {
+    "email": "ivanov@mail.ru",
+    "password": "StrongPass456",
+    "recipe": {
+      "ingredients": [
+        { "id": 3, "amount": 25 },
+        { "id": 4, "amount": 35 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 2 for ivanov@mail.ru",
+      "text": "This is a test recipe 2 created by ivanov@mail.ru.",
+      "cooking_time": 10
+    }
+  },
+  {
+    "email": "ivanov@mail.ru",
+    "password": "StrongPass456",
+    "recipe": {
+      "ingredients": [
+        { "id": 2, "amount": 45 },
+        { "id": 1, "amount": 60 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 3 for ivanov@mail.ru",
+      "text": "This is a test recipe 3 created by ivanov@mail.ru.",
+      "cooking_time": 15
+    }
+  },
+  {
+    "email": "masha@example.com",
+    "password": "Masha2024!",
+    "recipe": {
+      "ingredients": [
+        { "id": 2, "amount": 30 },
+        { "id": 3, "amount": 25 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 1 for masha@example.com",
+      "text": "This is a test recipe 1 created by masha@example.com.",
+      "cooking_time": 22
+    }
+  },
+  {
+    "email": "masha@example.com",
+    "password": "Masha2024!",
+    "recipe": {
+      "ingredients": [
+        { "id": 1, "amount": 10 },
+        { "id": 4, "amount": 40 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 2 for masha@example.com",
+      "text": "This is a test recipe 2 created by masha@example.com.",
+      "cooking_time": 18
+    }
+  },
+  {
+    "email": "masha@example.com",
+    "password": "Masha2024!",
+    "recipe": {
+      "ingredients": [
+        { "id": 3, "amount": 20 },
+        { "id": 2, "amount": 60 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 3 for masha@example.com",
+      "text": "This is a test recipe 3 created by masha@example.com.",
+      "cooking_time": 13
+    }
+  },
+  {
+    "email": "kolya@ya.ru",
+    "password": "KolyaPass789",
+    "recipe": {
+      "ingredients": [
+        { "id": 1, "amount": 35 },
+        { "id": 2, "amount": 45 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 1 for kolya@ya.ru",
+      "text": "This is a test recipe 1 created by kolya@ya.ru.",
+      "cooking_time": 11
+    }
+  },
+  {
+    "email": "kolya@ya.ru",
+    "password": "KolyaPass789",
+    "recipe": {
+      "ingredients": [
+        { "id": 3, "amount": 40 },
+        { "id": 4, "amount": 25 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 2 for kolya@ya.ru",
+      "text": "This is a test recipe 2 created by kolya@ya.ru.",
+      "cooking_time": 20
+    }
+  },
+  {
+    "email": "kolya@ya.ru",
+    "password": "KolyaPass789",
+    "recipe": {
+      "ingredients": [
+        { "id": 2, "amount": 50 },
+        { "id": 1, "amount": 10 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 3 for kolya@ya.ru",
+      "text": "This is a test recipe 3 created by kolya@ya.ru.",
+      "cooking_time": 17
+    }
+  },
+  {
+    "email": "anna@test.com",
+    "password": "AnnaPwd321",
+    "recipe": {
+      "ingredients": [
+        { "id": 3, "amount": 35 },
+        { "id": 4, "amount": 45 }
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+      "name": "Test Recipe 1 for anna@test.com",
+      "text": "This is a test recipe 1 created by anna@test.com.",
+      "cooking_time": 19
+    }
+  }
+]
