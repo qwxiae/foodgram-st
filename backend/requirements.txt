@@ -29,6 +29,7 @@ pytz==2025.2
 PyYAML==6.0.2
 requests==2.32.3
 requests-oauthlib==2.0.0
+ruff==0.11.12
 social-auth-app-django==5.4.3
 social-auth-core==4.6.1
 sqids==0.5.2
