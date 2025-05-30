@@ -19,7 +19,7 @@
       backend:
         container_name: foodgram-back
         build: ../backend
-        image: yourusername/foodgram-backend:latest
+        image: clmra/foodgram-backend:latest
         env_file:
           - ./.env
         volumes:
