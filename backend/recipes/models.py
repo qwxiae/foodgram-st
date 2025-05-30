@@ -15,12 +15,12 @@ class Ingredient(models.Model):
         db_index=True,
     )
     measurement_unit = models.CharField(
-        max_length=settings.LENGTH_OF_FIELDS_RECIPES, verbose_name="Еденица измерения"
+        max_length=settings.LENGTH_OF_FIELDS_RECIPES, verbose_name="Единица измерения"
     )
 
     class Meta:
-        verbose_name = "Ингридиенты"
-        verbose_name_plural = "Ингридиенты"
+        verbose_name = "Ингредиент"
+        verbose_name_plural = "Ингредиенты"
         constraints = [
             models.UniqueConstraint(
                 fields=["name", "measurement_unit"], name="unique_name_measurement_unit"
@@ -28,7 +28,7 @@ class Ingredient(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.name}, {self.measurement_unit}"
+        return f"{self.name} {self.measurement_unit}"
 
 
 class Recipe(models.Model):
@@ -46,7 +46,7 @@ class Recipe(models.Model):
     image = models.ImageField(upload_to="recipes/image/", verbose_name="Изображение")
     text = models.TextField(verbose_name="Описание")
     ingredients = models.ManyToManyField(
-        Ingredient, verbose_name="Ингридиенты", through="IngredientRecipe"
+        Ingredient, verbose_name="Ингредиенты", through="IngredientRecipe"
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name="Время готовки (минуты)",
@@ -95,7 +95,8 @@ class FavoriteShoppingCart(models.Model):
         abstract = True
         constraints = [
             UniqueConstraint(
-                fields=("user", "recipe"), name="%(app_label)s_%(class)s_unique"
+                fields=("user", "recipe"), 
+                name="%(app_label)s_%(class)s_unique"
             )
         ]
 
@@ -125,7 +126,7 @@ class IngredientRecipe(models.Model):
         Recipe,
         verbose_name="Рецепт",
         on_delete=models.CASCADE,
-        related_name="ingredienttorecipe",
+        related_name="ingredient_recipe",
     )
     amount = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1)], verbose_name="Количество ингредиента"

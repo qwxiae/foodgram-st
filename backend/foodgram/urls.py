@@ -7,7 +7,7 @@ from recipes.views import redirect_to_full_recipe
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
-    path('r/<str:short_url>/', redirect_to_full_recipe),
+    path('s/<str:short_url>/', redirect_to_full_recipe),
 
 ]
 
