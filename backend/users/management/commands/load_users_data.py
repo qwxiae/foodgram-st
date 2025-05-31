@@ -7,12 +7,12 @@ User = get_user_model()
 
 
 class Command(BaseCommand):
-    help = 'Загрузить пользователей из JSON-файла'
+    help = "Загрузить пользователей из JSON-файла"
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.WARNING('Старт загрузки пользователей'))
+        self.stdout.write(self.style.WARNING("Старт загрузки пользователей"))
 
-        with open('data/users.json', encoding='utf-8') as f:
+        with open("data/users.json", encoding="utf-8") as f:
             user_data = json.load(f)
 
         for user_dict in user_data:
@@ -23,10 +23,14 @@ class Command(BaseCommand):
                     email=user_dict["email"],
                     first_name=user_dict["first_name"],
                     last_name=user_dict["last_name"],
-                    password=user_dict["password"]
+                    password=user_dict["password"],
                 )
-                self.stdout.write(self.style.SUCCESS(f"Пользователь {email} создан"))
+                self.stdout.write(
+                    self.style.SUCCESS(f"Пользователь {email} создан")
+                )
             else:
                 self.stdout.write(f"Пользователь {email} уже существует")
 
-        self.stdout.write(self.style.SUCCESS("Загрузка пользователей завершена"))
+        self.stdout.write(self.style.SUCCESS(
+            "Загрузка пользователей завершена"
+        ))

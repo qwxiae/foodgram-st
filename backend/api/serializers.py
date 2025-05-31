@@ -2,12 +2,17 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers, status
 from rest_framework.fields import SerializerMethodField
 from rest_framework.exceptions import ValidationError
-from djoser.serializers import UserCreateSerializer, UserSerializer
+from djoser.serializers import (
+    UserCreateSerializer as
+    BaseUserCreateSerializer,
+    UserSerializer
+)
 from drf_extra_fields.fields import Base64ImageField
 
-from recipes.models import Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart
-from users.models import User
 from api.fields import Base64ImageFieldSerializer
+from users.models import User
+from recipes.models import (Favorite, Ingredient, IngredientRecipe,
+                            Recipe, ShoppingCart)
 
 
 class UserAvatarSerializer(UserSerializer):
@@ -45,10 +50,14 @@ class UserSerializer(UserAvatarSerializer):
         return obj.following.filter(user=request.user).exists()
 
 
-class UserCreateSerializer(UserCreateSerializer):
+class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta:
         model = User
-        fields = ("id", "email", "username", "first_name", "last_name", "password")
+        fields = (
+            "id", "email", "username",
+            "first_name", "last_name",
+            "password"
+        )
 
 
 class SubscribeListSerializer(UserSerializer):
@@ -57,13 +66,20 @@ class SubscribeListSerializer(UserSerializer):
 
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ("recipes_count", "recipes")
-        read_only_fields = ("email", "avatar", "username", "first_name", "last_name")
+        read_only_fields = (
+            "email", "avatar", "username",
+            "first_name", "last_name"
+        )
 
     def validate(self, data):
-        author_id = self.context.get("request").parser_context.get("kwargs").get("id")
+        request = self.context.get("request")
+        parser_context = request.parser_context if request else {}
+        kwargs = parser_context.get("kwargs", {})
+        author_id = kwargs.get("id")
+
         author = get_object_or_404(User, id=author_id)
         user = self.context.get("request").user
-        
+
         if user.follower.filter(author=author_id).exists():
             raise ValidationError(
                 detail="Подписка существует.",
@@ -102,7 +118,9 @@ class IngredientSerializer(serializers.ModelSerializer):
 class IngredientRecipeReadSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     name = serializers.ReadOnlyField(source="ingredient.name")
-    measurement_unit = serializers.ReadOnlyField(source="ingredient.measurement_unit")
+    measurement_unit = serializers.ReadOnlyField(
+        source="ingredient.measurement_unit"
+    )
 
     class Meta:
         model = IngredientRecipe
@@ -125,7 +143,10 @@ class IngredientRecipeWriteSerializer(serializers.ModelSerializer):
 
 class RecipeReadSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True, many=False)
-    ingredients = IngredientRecipeReadSerializer(many=True, source="ingredient_recipe")
+    ingredients = IngredientRecipeReadSerializer(
+        many=True,
+        source="ingredient_recipe"
+    )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     image = Base64ImageField(max_length=None)
@@ -133,7 +154,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            "id",   
+            "id",
             "author",
             "ingredients",
             "is_favorited",
@@ -186,9 +207,13 @@ class WriteRecipeSerializer(serializers.ModelSerializer):
 
     def validate_cooking_time(self, cooking_time):
         if cooking_time < 1:
-            raise serializers.ValidationError("Время готовки не меньше одной минуты.")
+            raise serializers.ValidationError(
+                "Время готовки не меньше одной минуты."
+            )
         elif cooking_time > 1440:
-            raise serializers.ValidationError("Время готовки не больше одного дня.")
+            raise serializers.ValidationError(
+                "Время готовки не больше одного дня."
+            )
         return cooking_time
 
     def validate_ingredients(self, ingredients):
@@ -197,10 +222,14 @@ class WriteRecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Ингрeдиенты отсутствуют.")
         for ingredient in ingredients:
             if ingredient["id"] in ingredients_set:
-                raise serializers.ValidationError("Ингредиенты должны быть уникальны.")
+                raise serializers.ValidationError(
+                    "Ингредиенты должны быть уникальны."
+                )
             ingredients_set.add(ingredient["id"])
             if int(ingredient.get("amount")) < 1:
-                raise serializers.ValidationError("Количество ингредиента должно быть больше 0.")
+                raise serializers.ValidationError(
+                    "Количество ингредиента должно быть больше 0."
+                )
         return ingredients
 
     @staticmethod
@@ -253,12 +282,15 @@ class BaseRecipeActionSerializer(serializers.ModelSerializer):
         related_manager = getattr(user, self.related_name, None)
         if related_manager and related_manager.filter(recipe=recipe).exists():
             raise serializers.ValidationError(self.error_message)
-  
+
         return self.Meta.model.objects.create(user=user, recipe=recipe)
 
     def to_representation(self, instance):
         request = self.context.get("request")
-        return RecipeShortSerializer(instance.recipe, context={"request": request}).data
+        return RecipeShortSerializer(
+            instance.recipe,
+            context={"request": request}
+        ).data
 
 
 class FavoriteSerializer(BaseRecipeActionSerializer):

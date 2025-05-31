@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart
+from .models import (Favorite, Ingredient, IngredientRecipe,
+                     Recipe, ShoppingCart)
 
 
 class IngredientInline(admin.TabularInline):
@@ -29,7 +30,9 @@ class RecipeAdmin(admin.ModelAdmin):
     favorites_count.short_description = "Избранное"
 
     def ingredients_list(self, obj):
-        return ", ".join([ingredients.name for ingredients in obj.ingredients.all()])
+        return ", ".join(
+            [ingredients.name for ingredients in obj.ingredients.all()]
+        )
     ingredients_list.short_description = "Ингридиенты"
 
 

@@ -1,7 +1,8 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import IngredientViewSet, RecipeViewSet, UserViewSet, FavoriteViewSet, ShoppingCartViewSet
+from .views import (IngredientViewSet, RecipeViewSet, UserViewSet,
+                    FavoriteViewSet, ShoppingCartViewSet)
 
 app_name = "api"
 
@@ -15,6 +16,12 @@ urlpatterns = [
     path("", include(router.urls)),
     path("", include("djoser.urls")),
     path("auth/", include("djoser.urls.authtoken")),
-    path("recipes/<int:pk>/favorite/", FavoriteViewSet.as_view({"post": "create", "delete": "destroy"}), name="favorite"),    
-    path("recipes/<int:pk>/shopping_cart/", ShoppingCartViewSet.as_view({"post": "create", "delete": "destroy"}), name="shopping_cart"),
+    path("recipes/<int:pk>/favorite/", FavoriteViewSet.as_view(
+        {"post": "create", "delete": "destroy"}),
+        name="favorite"
+    ),
+    path("recipes/<int:pk>/shopping_cart/", ShoppingCartViewSet.as_view(
+        {"post": "create", "delete": "destroy"}),
+        name="shopping_cart"
+    ),
 ]

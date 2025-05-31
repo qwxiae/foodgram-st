@@ -15,7 +15,8 @@ class Ingredient(models.Model):
         db_index=True,
     )
     measurement_unit = models.CharField(
-        max_length=settings.LENGTH_OF_FIELDS_RECIPES, verbose_name="Единица измерения"
+        max_length=settings.LENGTH_OF_FIELDS_RECIPES,
+        verbose_name="Единица измерения"
     )
 
     class Meta:
@@ -23,7 +24,8 @@ class Ingredient(models.Model):
         verbose_name_plural = "Ингредиенты"
         constraints = [
             models.UniqueConstraint(
-                fields=["name", "measurement_unit"], name="unique_name_measurement_unit"
+                fields=["name", "measurement_unit"],
+                name="unique_name_measurement_unit"
             )
         ]
 
@@ -32,7 +34,12 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
-    short_url = models.CharField(max_length=20, unique=True, db_index=True, blank=True)
+    short_url = models.CharField(
+        max_length=20,
+        unique=True,
+        db_index=True,
+        blank=True
+    )
     author = models.ForeignKey(
         User,
         verbose_name="Автор рецепта",
@@ -43,7 +50,10 @@ class Recipe(models.Model):
         max_length=settings.LENGTH_OF_FIELDS_RECIPES,
         verbose_name="Название рецепта",
     )
-    image = models.ImageField(upload_to="recipes/image/", verbose_name="Изображение")
+    image = models.ImageField(
+        upload_to="recipes/image/",
+        verbose_name="Изображение"
+    )
     text = models.TextField(verbose_name="Описание")
     ingredients = models.ManyToManyField(
         Ingredient, verbose_name="Ингредиенты", through="IngredientRecipe"
@@ -51,11 +61,18 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name="Время готовки (минуты)",
         validators=[
-            MinValueValidator(1, message="Время приготовления не менее 1 минуты."),
-            MaxValueValidator(1441, message="Время приготовления не более 24 часов."),
+            MinValueValidator(
+                1, message="Время приготовления не менее 1 минуты."
+            ),
+            MaxValueValidator(
+                1441, message="Время приготовления не более 24 часов."
+            ),
         ],
     )
-    pub_date = models.DateTimeField(verbose_name="Дата публикации", auto_now_add=True)
+    pub_date = models.DateTimeField(
+        verbose_name="Дата публикации",
+        auto_now_add=True
+    )
 
     class Meta:
         ordering = ("-pub_date",)
@@ -95,7 +112,7 @@ class FavoriteShoppingCart(models.Model):
         abstract = True
         constraints = [
             UniqueConstraint(
-                fields=("user", "recipe"), 
+                fields=("user", "recipe"),
                 name="%(app_label)s_%(class)s_unique"
             )
         ]
@@ -129,7 +146,8 @@ class IngredientRecipe(models.Model):
         related_name="ingredient_recipe",
     )
     amount = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(1)], verbose_name="Количество ингредиента"
+        validators=[MinValueValidator(1)],
+        verbose_name="Количество ингредиента"
     )
 
     class Meta:

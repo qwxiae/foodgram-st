@@ -1,20 +1,25 @@
 from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet
+from users.models import Follow, User
 from rest_framework import status, viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
-from djoser.views import UserViewSet
-
-from recipes.models import Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart
-from users.models import Follow, User
-
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    ShoppingCart
+)
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
 from .permissions import AuthorPermission
@@ -23,12 +28,11 @@ from .serializers import (
     WriteRecipeSerializer,
     FavoriteSerializer,
     IngredientSerializer,
-    RecipeReadSerializer,
     ShoppingCartSerializer,
     SubscribeListSerializer,
     UserSerializer,
 )
-from rest_framework import mixins, viewsets
+
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
@@ -37,6 +41,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (IngredientFilter,)
     search_fields = ("^name",)
     pagination_class = None
+
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
@@ -47,7 +52,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
 
     def update(self, request, *args, **kwargs):
-        if "ingredients" not in request.data or not request.data["ingredients"]:
+        if (
+            "ingredients" not in request.data
+            or not request.data["ingredients"]
+        ):
             return Response(
                 {"ingredients": ["Это поле не может быть путсым."]},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -71,7 +79,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["GET"])
     def download_shopping_cart(self, request):
         ingredients = (
-            IngredientRecipe.objects.filter(recipe__shopping_list__user=request.user)
+            IngredientRecipe.objects.filter(
+                recipe__shopping_list__user=request.user
+            )
             .order_by("ingredient__name")
             .values("ingredient__name", "ingredient__measurement_unit")
             .annotate(amount=Sum("amount"))
@@ -87,9 +97,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class FavoriteViewSet(mixins.CreateModelMixin,
-                      mixins.DestroyModelMixin,
-                      viewsets.GenericViewSet):
+class FavoriteViewSet(
+    CreateModelMixin, DestroyModelMixin, viewsets.GenericViewSet
+):
     serializer_class = FavoriteSerializer
     permission_classes = [IsAuthenticated]
 
@@ -103,17 +113,21 @@ class FavoriteViewSet(mixins.CreateModelMixin,
 
     def destroy(self, request, pk=None):
         recipe = get_object_or_404(Recipe, id=pk)
-        favorite = Favorite.objects.filter(user=request.user, recipe=recipe).first()
+        favorite = Favorite.objects.filter(
+            user=request.user, recipe=recipe
+        ).first()
+
         if not favorite:
-            return Response({"detail": "Рецепт не был добавлен в избранное"}, status=400)
+            return Response(
+                {"detail": "Рецепт не был добавлен в избранное"}, status=400
+            )
         favorite.delete()
         return Response(status=204)
 
 
-
-class ShoppingCartViewSet(mixins.CreateModelMixin,
-                          mixins.DestroyModelMixin,
-                          viewsets.GenericViewSet):
+class ShoppingCartViewSet(
+    CreateModelMixin, DestroyModelMixin, viewsets.GenericViewSet
+):
     serializer_class = ShoppingCartSerializer
     permission_classes = [IsAuthenticated]
 
@@ -124,12 +138,16 @@ class ShoppingCartViewSet(mixins.CreateModelMixin,
 
     def destroy(self, request, pk=None):
         recipe = get_object_or_404(Recipe, id=pk)
-        cart_item = ShoppingCart.objects.filter(user=request.user, recipe=recipe).first()
+        cart_item = ShoppingCart.objects.filter(
+            user=request.user, recipe=recipe
+        ).first()
         if not cart_item:
-            return Response({"detail": "Рецепт не добавлен в корзину"}, status=400)
+            return Response(
+                {"detail": "Рецепт не добавлен в корзину"},
+                status=400
+            )
         cart_item.delete()
         return Response(status=204)
-
 
 
 class UserViewSet(UserViewSet):
@@ -138,7 +156,11 @@ class UserViewSet(UserViewSet):
     pagination_class = CustomPagination
     permission_classes = [AllowAny]
 
-    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated]
+    )
     def me(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
@@ -155,7 +177,11 @@ class UserViewSet(UserViewSet):
     def avatar(self, request):
         user = self.request.user
         if request.method == "PUT":
-            serializer = UserAvatarSerializer(user, data=request.data, partial=True)
+            serializer = UserAvatarSerializer(
+                user,
+                data=request.data,
+                partial=True
+            )
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(
@@ -172,7 +198,6 @@ class UserViewSet(UserViewSet):
         methods=["post", "delete"],
         permission_classes=[IsAuthenticated],
     )
-
     def subscribe(self, request, id):
         user = request.user
         author = get_object_or_404(User, pk=id)
@@ -186,7 +211,9 @@ class UserViewSet(UserViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == "DELETE":
-            follow_instance = Follow.objects.filter(user=user, author=author).first()
+            follow_instance = Follow.objects.filter(
+                user=user, author=author
+            ).first()
             if not follow_instance:
                 return Response(
                     {"errors": "Подписка не существует."},

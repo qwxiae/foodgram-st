@@ -3,7 +3,6 @@
     services:
       frontend:
         container_name: foodgram-front
-        build: ../frontend
         image: clmra/foodgram-frontend:latest
         volumes:
           - ../frontend/:/app/result_build/
@@ -18,7 +17,6 @@
 
       backend:
         container_name: foodgram-back
-        build: ../backend
         image: clmra/foodgram-backend:latest
         env_file:
           - ./.env

@@ -20,13 +20,17 @@ class User(AbstractUser):
         verbose_name="Фамилия",
     )
     email = models.EmailField(
-        max_length=settings.LENGTH_OF_FIELDS_USER_1, verbose_name="email", unique=True
+        max_length=settings.LENGTH_OF_FIELDS_USER_1,
+        verbose_name="email",
+        unique=True
     )
     username = models.CharField(
         verbose_name="username",
         max_length=settings.LENGTH_OF_FIELDS_USER_2,
         unique=True,
-        validators=[UnicodeUsernameValidator(),],
+        validators=[
+            UnicodeUsernameValidator(),
+        ],
     )
 
     class Meta:
@@ -56,7 +60,10 @@ class Follow(models.Model):
         ordering = ("-id",)
         constraints = [
             UniqueConstraint(fields=("user", "author"), name="unique_follow"),
-            models.CheckConstraint(check=~Q(user=F("author")), name="no_self_follow"),
+            models.CheckConstraint(
+                check=~Q(user=F("author")),
+                name="no_self_follow"
+            ),
         ]
         verbose_name = "Подписка"
         verbose_name_plural = "Подписки"
