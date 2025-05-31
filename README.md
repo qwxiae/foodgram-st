@@ -59,8 +59,3 @@ python manage.py load_ingredients_data
 cd ../infra
 docker-compose up -d --build
 ```
-
-### Создайте суперпользователя:
-```
-docker-compose exec backend python manage.py createsuperuser
-```
