@@ -116,7 +116,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeReadSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    id = serializers.ReadOnlyField(source="ingredient.id")
     name = serializers.ReadOnlyField(source="ingredient.name")
     measurement_unit = serializers.ReadOnlyField(
         source="ingredient.measurement_unit"
@@ -133,12 +133,19 @@ class IngredientRecipeReadSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeWriteSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    id = serializers.IntegerField()
     amount = serializers.IntegerField()
 
     class Meta:
         model = IngredientRecipe
         fields = ("id", "amount")
+
+    def validate_id(self, value):
+        if not Ingredient.objects.filter(id=value).exists():
+            raise serializers.ValidationError(
+                f"Ингредиент с id={value} не существует."
+            )
+        return value
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
@@ -238,7 +245,9 @@ class WriteRecipeSerializer(serializers.ModelSerializer):
         for ingredient_data in ingredients:
             ingredient_list.append(
                 IngredientRecipe(
-                    ingredient=ingredient_data["id"],
+                    ingredient=Ingredient.objects.get(
+                        id=ingredient_data["id"]
+                    ),
                     amount=ingredient_data["amount"],
                     recipe=recipe,
                 )

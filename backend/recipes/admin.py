@@ -20,7 +20,7 @@ class RecipeAdmin(admin.ModelAdmin):
         "favorites_count",
         "ingredients_list",
     )
-    search_fields = ("name", "author")
+    search_fields = ("name", "author__username")
     list_filter = ("author", "name")
     inlines = (IngredientInline,)
     empty_value_display = "[пусто]"
@@ -38,7 +38,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ("name", "measurement_unit")
+    list_display = ("id", "name", "measurement_unit")
     search_fields = ("name",)
     list_filter = ("name",)
     empty_value_display = "[пусто]"
@@ -48,7 +48,7 @@ class IngredientAdmin(admin.ModelAdmin):
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ("user", "recipe")
     list_filter = ("user", "recipe")
-    search_fields = ("user", "recipe")
+    search_fields = ("user__username", "recipe__name")
     empty_value_display = "[пусто]"
 
 
@@ -56,5 +56,5 @@ class FavoriteAdmin(admin.ModelAdmin):
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ("recipe", "user")
     list_filter = ("recipe", "user")
-    search_fields = ("user",)
+    search_fields = ("user__username",)
     empty_value_display = "[пусто]"

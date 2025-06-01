@@ -1,7 +1,7 @@
 from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from djoser.views import UserViewSet
+from djoser.views import UserViewSet as BaseUserViewSet
 from users.models import Follow, User
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -149,7 +149,7 @@ class ShoppingCartViewSet(
         return Response(status=204)
 
 
-class UserViewSet(UserViewSet):
+class UserViewSet(BaseUserViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = CustomPagination
