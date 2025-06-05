@@ -1,8 +1,9 @@
-import json
 import base64
+import json
+
+from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -11,7 +12,7 @@ class Command(BaseCommand):
     help = "Load recipes from JSON file using ORM and your models"
 
     def handle(self, *args, **options):
-        from recipes.models import Recipe, Ingredient, IngredientRecipe
+        from recipes.models import Ingredient, IngredientRecipe, Recipe
 
         self.stdout.write("Starting recipe loading...")
 

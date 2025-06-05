@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,7 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="*").split(",")
 
 AUTH_USER_MODEL = "users.User"
-DEBUG = os.getenv('DEBUG', default=False)
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
+
 
 SECRET_KEY = os.getenv("TOKEN", "default-value")
 CORS_ORIGIN_ALLOW_ALL = True
@@ -22,16 +24,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "foodgram",
-    "api",
-    "users",
-    "recipes",
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
     "djoser",
     "drf_yasg",
     "colorfield",
+    "users",
+    "recipes",
+    "api",
+    "foodgram",
 ]
 
 MIDDLEWARE = [
@@ -62,27 +64,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "foodgram.wsgi.application"
 
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": os.getenv("DB_ENGINE", default="django.db.backends.postgresql"),
-            "NAME": os.getenv("DB_NAME", default="postgres"),
-            "USER": os.getenv("POSTGRES_USER", default="postgres"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="postgres"),
-            "HOST": os.getenv("DB_HOST", default="localhost"),
-            "PORT": os.getenv("DB_PORT", default="5432"),
-        }
-    }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+DATABASES = {
+    "default": {
+        "ENGINE": os.getenv("DB_ENGINE", default="django.db.backends.postgresql"),
+        "NAME": os.getenv("DB_NAME", default="postgres"),
+        "USER": os.getenv("POSTGRES_USER", default="postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="postgres"),
+        "HOST": os.getenv("DB_HOST", default="localhost"),
+        "PORT": os.getenv("DB_PORT", default="5432"),
+    }
+}
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -162,11 +155,3 @@ DJOSER = {
     },
     "HIDE_USERS": False,
 }
-
-LENGTH_OF_FIELDS_USER_1 = 150
-
-LENGTH_OF_FIELDS_USER_2 = 150
-
-LENGTH_OF_FIELDS_RECIPES = 200
-
-PAGINATION_PAGE_SIZE = 6

@@ -1,9 +1,11 @@
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import F, Q, UniqueConstraint
+
+from foodgram.constants import LENGTH_OF_FIELDS_USER_1, LENGTH_OF_FIELDS_USER_2
 
 
 class User(AbstractUser):
@@ -16,20 +18,20 @@ class User(AbstractUser):
         default=""
     )
     first_name = models.CharField(
-        verbose_name="Имя", max_length=settings.LENGTH_OF_FIELDS_USER_1
+        verbose_name="Имя", max_length=LENGTH_OF_FIELDS_USER_1
     )
     last_name = models.CharField(
-        max_length=settings.LENGTH_OF_FIELDS_USER_1,
+        max_length=LENGTH_OF_FIELDS_USER_1,
         verbose_name="Фамилия",
     )
     email = models.EmailField(
-        max_length=settings.LENGTH_OF_FIELDS_USER_1,
+        max_length=LENGTH_OF_FIELDS_USER_1,
         verbose_name="email",
         unique=True
     )
     username = models.CharField(
         verbose_name="username",
-        max_length=settings.LENGTH_OF_FIELDS_USER_2,
+        max_length=LENGTH_OF_FIELDS_USER_2,
         unique=True,
         validators=[
             UnicodeUsernameValidator(),

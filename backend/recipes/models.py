@@ -1,21 +1,23 @@
+from datetime import datetime
+
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.core.validators import MaxValueValidator, MinValueValidator
-
-from datetime import datetime
-from users.models import User
 from sqids import Sqids
+
+from foodgram.constants import LENGTH_OF_FIELDS_RECIPES
+from users.models import User
 
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=settings.LENGTH_OF_FIELDS_RECIPES,
+        max_length=LENGTH_OF_FIELDS_RECIPES,
         verbose_name="Название ингредиента",
         db_index=True,
     )
     measurement_unit = models.CharField(
-        max_length=settings.LENGTH_OF_FIELDS_RECIPES,
+        max_length=LENGTH_OF_FIELDS_RECIPES,
         verbose_name="Единица измерения"
     )
 
@@ -47,7 +49,7 @@ class Recipe(models.Model):
         related_name="recipes",
     )
     name = models.CharField(
-        max_length=settings.LENGTH_OF_FIELDS_RECIPES,
+        max_length=LENGTH_OF_FIELDS_RECIPES,
         verbose_name="Название рецепта",
     )
     image = models.ImageField(

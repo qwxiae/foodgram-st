@@ -1,36 +1,32 @@
 from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from djoser.views import UserViewSet as BaseUserViewSet
-from users.models import Follow, User
-from rest_framework import status, viewsets
-from rest_framework.response import Response
-from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet as BaseUserViewSet
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
-from recipes.models import (
-    Favorite,
-    Ingredient,
-    IngredientRecipe,
-    Recipe,
-    ShoppingCart
-)
+from rest_framework.response import Response
+
+from recipes.models import Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart
+from users.models import Follow, User
+
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
 from .permissions import AuthorPermission
 from .serializers import (
-    UserAvatarSerializer,
-    WriteRecipeSerializer,
     FavoriteSerializer,
     IngredientSerializer,
     ShoppingCartSerializer,
     SubscribeListSerializer,
+    UserAvatarSerializer,
     UserSerializer,
+    WriteRecipeSerializer,
 )
 
 
