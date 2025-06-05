@@ -13,6 +13,7 @@ RUN pip install --upgrade pip && \
 
 COPY . .
 
+RUN chmod +x wait-for-it.sh
 RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["sh", "./entrypoint.sh"]

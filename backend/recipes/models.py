@@ -1,9 +1,8 @@
-from datetime import datetime
-
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
+from django.utils import timezone
 from sqids import Sqids
 
 from foodgram.constants import LENGTH_OF_FIELDS_RECIPES
@@ -58,7 +57,10 @@ class Recipe(models.Model):
     )
     text = models.TextField(verbose_name="Описание")
     ingredients = models.ManyToManyField(
-        Ingredient, verbose_name="Ингредиенты", through="IngredientRecipe"
+        Ingredient,
+        verbose_name="Ингредиенты",
+        through="IngredientRecipe",
+        related_name="in_recipes"
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name="Время готовки (минуты)",
@@ -86,7 +88,7 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.short_url:
-            today = datetime.today()
+            today = timezone.now()
             keys_for_short_url = [
                 round(today.timestamp() * 1000),
                 self.author.id,
@@ -148,7 +150,10 @@ class IngredientRecipe(models.Model):
         related_name="ingredient_recipe",
     )
     amount = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(1)],
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(10000)
+        ],
         verbose_name="Количество ингредиента"
     )
 
