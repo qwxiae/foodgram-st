@@ -10,7 +10,10 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ("username", "first_name", "last_name")
     avatar = models.ImageField(
-        upload_to="avatars/", verbose_name="Аватар", blank=True, null=True
+        upload_to="avatars/",
+        verbose_name="Аватар",
+        blank=True,
+        default=""
     )
     first_name = models.CharField(
         verbose_name="Имя", max_length=settings.LENGTH_OF_FIELDS_USER_1
