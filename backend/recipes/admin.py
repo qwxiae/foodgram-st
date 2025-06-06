@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from .models import Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart
+from .models import (
+    Favorite,
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    ShoppingCart,
+)
 
 
 class IngredientInline(admin.TabularInline):
@@ -21,9 +27,15 @@ class RecipeAdmin(admin.ModelAdmin):
         "ingredients_list",
     )
     search_fields = ("name", "author__username")
-    list_filter = ("author", "name")
+    list_filter = ("author", "cooking_time")
     inlines = (IngredientInline,)
     empty_value_display = "[пусто]"
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related("author").prefetch_related(
+            "ingredient_recipe__ingredient"
+        )
 
     def favorites_count(self, obj):
         return obj.favorites.count()
@@ -31,9 +43,10 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def ingredients_list(self, obj):
         return ", ".join(
-            [ingredients.name for ingredients in obj.ingredients.all()]
+            ir.ingredient.name for ir in obj.ingredient_recipe.all()
         )
-    ingredients_list.short_description = "Ингридиенты"
+    ingredients_list.short_description = "Ингредиенты"
+
 
 
 @admin.register(Ingredient)

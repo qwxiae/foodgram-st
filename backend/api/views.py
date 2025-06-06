@@ -13,7 +13,13 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 
-from recipes.models import Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    ShoppingCart,
+)
 from users.models import Follow, User
 
 from .filters import IngredientFilter, RecipeFilter

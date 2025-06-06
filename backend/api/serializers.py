@@ -7,7 +7,13 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
 
 from api.fields import Base64ImageFieldSerializer
-from recipes.models import Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    ShoppingCart,
+)
 from users.models import User
 
 
