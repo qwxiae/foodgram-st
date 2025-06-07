@@ -5,14 +5,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="*").split(",")
-
 AUTH_USER_MODEL = "users.User"
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
-
 
 SECRET_KEY = os.getenv("TOKEN", "default-value")
 CORS_ORIGIN_ALLOW_ALL = True
@@ -92,9 +90,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 

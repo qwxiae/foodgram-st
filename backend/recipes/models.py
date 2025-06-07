@@ -141,7 +141,10 @@ class ShoppingCart(FavoriteShoppingCart):
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE, verbose_name="Ингредиент"
+        Ingredient,
+        on_delete=models.CASCADE,
+        verbose_name="Ингредиент",
+        related_name="in_ingredient_recipes"
     )
     recipe = models.ForeignKey(
         Recipe,
@@ -151,8 +154,10 @@ class IngredientRecipe(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         validators=[
-            MinValueValidator(1),
-            MaxValueValidator(10000)
+            MinValueValidator(
+                1, message="Минимальный вес 1."),
+            MaxValueValidator(
+                10000, message="Вес превосходит максимум - 10000 .")
         ],
         verbose_name="Количество ингредиента"
     )

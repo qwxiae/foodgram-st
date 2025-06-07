@@ -1,4 +1,4 @@
-from django.db.models import Sum, Count
+from django.db.models import Count, Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -53,42 +53,30 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
-    def update(self, request, *args, **kwargs):
-        if (
-            "ingredients" not in request.data
-            or not request.data["ingredients"]
-        ):
-            return Response(
-                {"ingredients": ["Это поле не может быть путсым."]},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().update(request, *args, **kwargs)
-
     @staticmethod
-    def send_message(ingredients):
-        shopping_list = "Купить в магазине:"
-        for ingredient in ingredients:
-            shopping_list += (
-                f"\n{ingredient['ingredient__name']} "
-                f"({ingredient['ingredient__measurement_unit']}) - "
-                f"{ingredient['amount']}"
+    def generate_shopping_list_text(ingredients):
+        lines = ["Купить в магазине:"]
+        for ing in ingredients:
+            lines.append(
+                f"{ing['ingredient__name']} ({ing['ingredient__measurement_unit']}) - {ing['amount']}"
             )
-        file = "shopping_list.txt"
-        response = HttpResponse(shopping_list, content_type="text/plain")
-        response["Content-Disposition"] = f'attachment; filename="{file}.txt"'
-        return response
+        return "\n".join(lines)
 
     @action(detail=False, methods=["GET"])
     def download_shopping_cart(self, request):
         ingredients = (
-            IngredientRecipe.objects.filter(
-                recipe__shopping_list__user=request.user
-            )
+            IngredientRecipe.objects
+            .filter(recipe__shopping_list__user=request.user)
             .order_by("ingredient__name")
             .values("ingredient__name", "ingredient__measurement_unit")
             .annotate(amount=Sum("amount"))
         )
-        return self.send_message(ingredients)
+        shopping_list_text = self.generate_shopping_list_text(ingredients)
+        file = "shopping_list.txt"
+        response = HttpResponse(shopping_list_text, content_type="text/plain")
+        response["Content-Disposition"] = f'attachment; filename="{file}.txt"'
+        return response
+
 
     @action(methods=("GET",), detail=True, url_path="get-link")
     def get_link(self, request, pk=None):
