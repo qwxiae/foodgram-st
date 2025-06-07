@@ -1,4 +1,4 @@
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -205,11 +205,31 @@ class UserViewSet(BaseUserViewSet):
 
         if request.method == "POST":
             serializer = SubscribeListSerializer(
-                author, data=request.data, context={"request": request}
+                author,
+                data=request.data,
+                context={
+                    "request": request,
+                    "author": author
+                }
             )
             serializer.is_valid(raise_exception=True)
             Follow.objects.create(user=user, author=author)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            annotated_author = User.objects.annotate(
+                recipes_count=Count("recipes")
+            ).get(pk=author.pk)
+
+            serializer = SubscribeListSerializer(
+                annotated_author,
+                context={
+                    "request": request,
+                    "author": author
+                }
+            )
+
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED)
 
         if request.method == "DELETE":
             follow_instance = Follow.objects.filter(
@@ -226,9 +246,15 @@ class UserViewSet(BaseUserViewSet):
     @action(detail=False, permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
         user = request.user
-        queryset = User.objects.filter(following__user=user)
+        queryset = User.objects.filter(following__user=user).annotate(
+            recipes_count=Count("recipes")
+        )
         pages = self.paginate_queryset(queryset)
         serializer = SubscribeListSerializer(
-            pages, many=True, context={"request": request}
+            pages,
+            many=True,
+            context={
+                "request": request,
+            }
         )
         return self.get_paginated_response(serializer.data)

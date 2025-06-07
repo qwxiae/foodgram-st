@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -63,7 +62,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
 
 class SubscribeListSerializer(UserSerializer):
-    recipes_count = SerializerMethodField()
+    recipes_count = serializers.IntegerField(read_only=True, default=0)
     recipes = SerializerMethodField()
 
     class Meta(UserSerializer.Meta):
@@ -74,15 +73,10 @@ class SubscribeListSerializer(UserSerializer):
         )
 
     def validate(self, data):
-        request = self.context.get("request")
-        parser_context = request.parser_context if request else {}
-        kwargs = parser_context.get("kwargs", {})
-        author_id = kwargs.get("id")
-
-        author = get_object_or_404(User, id=author_id)
         user = self.context.get("request").user
+        author = self.context.get("author")
 
-        if user.follower.filter(author=author_id).exists():
+        if user.follower.filter(author=author).exists():
             raise ValidationError(
                 detail="Подписка существует.",
                 code=status.HTTP_400_BAD_REQUEST,
@@ -93,9 +87,6 @@ class SubscribeListSerializer(UserSerializer):
                 code=status.HTTP_400_BAD_REQUEST,
             )
         return data
-
-    def get_recipes_count(self, obj):
-        return obj.recipes.count()
 
     def get_recipes(self, obj):
         request = self.context.get("request")
@@ -143,6 +134,7 @@ class IngredientRecipeWriteSerializer(serializers.ModelSerializer):
         fields = ("id", "amount")
 
     def validate_id(self, value):
+        # ISSUE
         if not Ingredient.objects.filter(id=value).exists():
             raise serializers.ValidationError(
                 f"Ингредиент с id={value} не существует."
@@ -175,6 +167,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         )
 
     def get_ingredients(self, obj):
+        # ISSUE
         ingredients = IngredientRecipe.objects.filter(recipe=obj)
         return IngredientRecipeReadSerializer(ingredients, many=True).data
 
@@ -247,6 +240,7 @@ class WriteRecipeSerializer(serializers.ModelSerializer):
         for ingredient_data in ingredients:
             ingredient_list.append(
                 IngredientRecipe(
+                    # ISSUE
                     ingredient=Ingredient.objects.get(
                         id=ingredient_data["id"]
                     ),
@@ -254,17 +248,19 @@ class WriteRecipeSerializer(serializers.ModelSerializer):
                     recipe=recipe,
                 )
             )
-
+# ISSUE
         IngredientRecipe.objects.bulk_create(ingredient_list)
 
     def create(self, validated_data):
         request = self.context.get("request", None)
         ingredients = validated_data.pop("ingredients")
+        # ISSUE
         recipe = Recipe.objects.create(author=request.user, **validated_data)
         self.create_ingredients(recipe, ingredients)
         return recipe
 
     def update(self, instance, validated_data):
+        # ISSUE
         IngredientRecipe.objects.filter(recipe=instance).delete()
         ingredients = validated_data.pop("ingredients")
         self.create_ingredients(instance, ingredients)
@@ -293,7 +289,7 @@ class BaseRecipeActionSerializer(serializers.ModelSerializer):
         related_manager = getattr(user, self.related_name, None)
         if related_manager and related_manager.filter(recipe=recipe).exists():
             raise serializers.ValidationError(self.error_message)
-
+        # ISSUE
         return self.Meta.model.objects.create(user=user, recipe=recipe)
 
     def to_representation(self, instance):
