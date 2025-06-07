@@ -165,11 +165,6 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             "cooking_time",
         )
 
-    def get_ingredients(self, obj):
-        # ISSUE
-        ingredients = IngredientRecipe.objects.filter(recipe=obj)
-        return IngredientRecipeReadSerializer(ingredients, many=True).data
-
     def get_is_favorited(self, obj):
         request = self.context.get("request")
         if not request or request.user.is_anonymous:
@@ -239,27 +234,21 @@ class WriteRecipeSerializer(serializers.ModelSerializer):
         for ingredient_data in ingredients:
             ingredient_list.append(
                 IngredientRecipe(
-                    # ISSUE
-                    ingredient=Ingredient.objects.get(
-                        id=ingredient_data["id"]
-                    ),
+                    ingredient_id=ingredient_data["id"],
                     amount=ingredient_data["amount"],
                     recipe=recipe,
                 )
             )
-# ISSUE
         IngredientRecipe.objects.bulk_create(ingredient_list)
 
     def create(self, validated_data):
         request = self.context.get("request", None)
         ingredients = validated_data.pop("ingredients")
-        # ISSUE
         recipe = Recipe.objects.create(author=request.user, **validated_data)
         self.create_ingredients(recipe, ingredients)
         return recipe
 
     def update(self, instance, validated_data):
-        # ISSUE
         IngredientRecipe.objects.filter(recipe=instance).delete()
         ingredients = validated_data.pop("ingredients")
         self.create_ingredients(instance, ingredients)
@@ -288,7 +277,6 @@ class BaseRecipeActionSerializer(serializers.ModelSerializer):
         related_manager = getattr(user, self.related_name, None)
         if related_manager and related_manager.filter(recipe=recipe).exists():
             raise serializers.ValidationError(self.error_message)
-        # ISSUE
         return self.Meta.model.objects.create(user=user, recipe=recipe)
 
     def to_representation(self, instance):
