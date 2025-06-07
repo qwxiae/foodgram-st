@@ -134,7 +134,6 @@ class IngredientRecipeWriteSerializer(serializers.ModelSerializer):
         fields = ("id", "amount")
 
     def validate_id(self, value):
-        # ISSUE
         if not Ingredient.objects.filter(id=value).exists():
             raise serializers.ValidationError(
                 f"Ингредиент с id={value} не существует."
