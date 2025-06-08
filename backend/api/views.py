@@ -95,7 +95,9 @@ class FavoriteViewSet(
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Favorite.objects.filter(user=self.request.user)
+        return Favorite.objects.filter(
+            user=self.request.user
+        ).select_related('recipe')
 
     def perform_create(self, serializer):
         recipe_id = self.kwargs["pk"]
@@ -180,8 +182,11 @@ class UserViewSet(BaseUserViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        self.request.user.avatar = None
-        self.request.user.save()
+        if user.avatar:
+            user.avatar.delete(save=False)
+            user.avatar = None
+            user.save()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
