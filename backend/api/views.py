@@ -60,7 +60,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         lines = ["Купить в магазине:"]
         for ing in ingredients:
             lines.append(
-                f"{ing['ingredient__name']} ({ing['ingredient__measurement_unit']}) - {ing['amount']}"
+                f"{ing['ingredient__name']} "
+                f"({ing['ingredient__measurement_unit']}) - {ing['amount']}"
             )
         return "\n".join(lines)
 
@@ -78,7 +79,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         response = HttpResponse(shopping_list_text, content_type="text/plain")
         response["Content-Disposition"] = f'attachment; filename="{file}.txt"'
         return response
-
 
     @action(methods=("GET",), detail=True, url_path="get-link")
     def get_link(self, request, pk=None):
@@ -105,17 +105,17 @@ class FavoriteViewSet(
         serializer.save(recipe=recipe)
 
     def destroy(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        favorite = Favorite.objects.filter(
-            user=request.user, recipe=recipe
-        ).first()
+        deleted_count, _ = Favorite.objects.filter(
+            user=request.user,
+            recipe_id=pk
+        ).delete()
 
-        if not favorite:
+        if deleted_count == 0:
             return Response(
-                {"detail": "Рецепт не был добавлен в избранное"}, status=400
+                {"errors": "Избранный рецепт не найден."},
+                status=status.HTTP_404_NOT_FOUND,
             )
-        favorite.delete()
-        return Response(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ShoppingCartViewSet(
@@ -130,17 +130,16 @@ class ShoppingCartViewSet(
         serializer.save(recipe=recipe)
 
     def destroy(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        cart_item = ShoppingCart.objects.filter(
-            user=request.user, recipe=recipe
-        ).first()
-        if not cart_item:
+        deleted_count, _ = ShoppingCart.objects.filter(
+            user=request.user,
+            recipe_id=pk
+        ).delete()
+        if deleted_count == 0:
             return Response(
                 {"detail": "Рецепт не добавлен в корзину"},
-                status=400
+                status=status.HTTP_404_NOT_FOUND,
             )
-        cart_item.delete()
-        return Response(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserViewSet(BaseUserViewSet):
@@ -231,7 +230,11 @@ class UserViewSet(BaseUserViewSet):
                     {"errors": "Пользователь не найден."},
                     status=status.HTTP_404_NOT_FOUND
                 )
-            deleted_count, _ = Follow.objects.filter(user=user, author_id=id).delete()
+            deleted_count, _ = Follow.objects.filter(
+                user=user,
+                author_id=id
+            ).delete()
+
             if deleted_count == 0:
                 return Response(
                     {"errors": "Подписка не существует."},

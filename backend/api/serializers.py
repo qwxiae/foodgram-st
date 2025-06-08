@@ -13,7 +13,7 @@ from recipes.models import (
     Recipe,
     ShoppingCart,
 )
-from users.models import User, Follow
+from users.models import Follow, User
 
 
 class UserAvatarSerializer(UserSerializer):
@@ -105,6 +105,7 @@ class SubscribeListSerializer(UserSerializer):
             user=self.context["request"].user,
             author=self.context["author"]
         )
+
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
