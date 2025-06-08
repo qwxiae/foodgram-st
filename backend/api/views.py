@@ -196,9 +196,9 @@ class UserViewSet(BaseUserViewSet):
     )
     def subscribe(self, request, id):
         user = request.user
-        author = get_object_or_404(User, pk=id)
 
         if request.method == "POST":
+            author = get_object_or_404(User, pk=id)
             serializer = SubscribeListSerializer(
                 author,
                 data=request.data,
@@ -227,15 +227,17 @@ class UserViewSet(BaseUserViewSet):
                 status=status.HTTP_201_CREATED)
 
         if request.method == "DELETE":
-            follow_instance = Follow.objects.filter(
-                user=user, author=author
-            ).first()
-            if not follow_instance:
+            if not User.objects.filter(pk=id).exists():
+                return Response(
+                    {"errors": "Пользователь не найден."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            deleted_count, _ = Follow.objects.filter(user=user, author_id=id).delete()
+            if deleted_count == 0:
                 return Response(
                     {"errors": "Подписка не существует."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            follow_instance.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, permission_classes=[IsAuthenticated])
