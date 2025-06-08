@@ -209,7 +209,7 @@ class UserViewSet(BaseUserViewSet):
             serializer.save()
 
             annotated_author = User.objects.annotate(
-                recipes_count=Count("recipes")
+                recipes_count=Count("recipes", distinct=True)
             ).get(pk=author.pk)
 
             serializer = SubscribeListSerializer(
@@ -246,7 +246,7 @@ class UserViewSet(BaseUserViewSet):
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(following__user=user).annotate(
-            recipes_count=Count("recipes")
+            recipes_count=Count("recipes", distinct=True)
         )
         pages = self.paginate_queryset(queryset)
         serializer = SubscribeListSerializer(

@@ -8,11 +8,13 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="*").split(",")
+ALLOWED_HOSTS = [
+    host.strip() for host in os.getenv("ALLOWED_HOSTS", "*").split(",")
+]
 AUTH_USER_MODEL = "users.User"
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
 
-SECRET_KEY = os.getenv("TOKEN", "default-value")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
