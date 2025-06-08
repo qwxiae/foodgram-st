@@ -21,7 +21,6 @@ git clone https://github.com/clmr-y/foodgram-st.git
 cd backend
 ```
 - Установите и активируйте виртуальное окружение
-
 ```
 python -m venv venv
 ```
@@ -38,12 +37,16 @@ pip install -r requirements.txt
 - Создайте файл .env в папке infra:
 ```
 DB_ENGINE=django.db.backends.postgresql
-DB_NAME=postgres
+POSTGRES_DB=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
+
 DB_HOST=db
 DB_PORT=5432
 DEBUG=0
+
+DJANGO_SECRET_KEY='<your secret key>'
+ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
 - Выполните миграции:
@@ -71,4 +74,11 @@ python manage.py load_ingredients_data
 ```
 cd ../infra
 docker-compose up -d --build
+```
+Создайте суперпользователя
+```
+docker exec -it foodgram-back sh
+```
+```
+python manage.py createsuperuser
 ```
