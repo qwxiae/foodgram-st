@@ -13,7 +13,7 @@ from recipes.models import (
     Recipe,
     ShoppingCart,
 )
-from users.models import User
+from users.models import User, Follow
 
 
 class UserAvatarSerializer(UserSerializer):
@@ -68,8 +68,11 @@ class SubscribeListSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ("recipes_count", "recipes")
         read_only_fields = (
-            "email", "avatar", "username",
-            "first_name", "last_name"
+            "email",
+            "avatar",
+            "username",
+            "first_name",
+            "last_name"
         )
 
     def validate(self, data):
@@ -97,6 +100,11 @@ class SubscribeListSerializer(UserSerializer):
         serializer = RecipeShortSerializer(recipes, many=True, read_only=True)
         return serializer.data
 
+    def create(self, validated_data):
+        return Follow.objects.create(
+            user=self.context["request"].user,
+            author=self.context["author"]
+        )
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:

@@ -200,7 +200,6 @@ class UserViewSet(BaseUserViewSet):
         if request.method == "POST":
             author = get_object_or_404(User, pk=id)
             serializer = SubscribeListSerializer(
-                author,
                 data=request.data,
                 context={
                     "request": request,
@@ -208,7 +207,7 @@ class UserViewSet(BaseUserViewSet):
                 }
             )
             serializer.is_valid(raise_exception=True)
-            Follow.objects.create(user=user, author=author)
+            serializer.save()
 
             annotated_author = User.objects.annotate(
                 recipes_count=Count("recipes")
